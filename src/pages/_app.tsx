@@ -1,5 +1,6 @@
 import "../styles/globals.css";
 import type { AppProps } from "next/app";
+import { ApolloProvider, ApolloClient, InMemoryCache } from "@apollo/client";
 import "@rainbow-me/rainbowkit/styles.css";
 import {
   getDefaultWallets,
@@ -7,15 +8,21 @@ import {
   midnightTheme,
 } from "@rainbow-me/rainbowkit";
 import { chain, configureChains, createClient, WagmiConfig } from "wagmi";
+import { MultiSigInjectProvider } from "../context/MultiSigInjection";
 import { alchemyProvider } from "wagmi/providers/alchemy";
-import { publicProvider } from "wagmi/providers/public";
 import Layout from "../components/Layout";
 
+export const client = new ApolloClient({
+  uri: process.env.SUBGRAPH_API_URL,
+  cache: new InMemoryCache(),
+});
+console.log("api key wtf", process.env.ALCHEMY_API_KEY);
+
 const { chains, provider } = configureChains(
-  [chain.mainnet, chain.polygon, chain.optimism, chain.goerli],
+  [chain.goerli],
   [
     alchemyProvider({ apiKey: "NX0zVuIVZSWreJ9zbABIAfjF8ZTim44Y" }),
-    publicProvider(),
+    // publicProvider(),
   ]
 );
 
@@ -38,9 +45,13 @@ function MyApp({ Component, pageProps }: AppProps) {
         theme={midnightTheme({ overlayBlur: "small" })}
         chains={chains}
       >
-        <Layout>
-          <Component {...pageProps} />
-        </Layout>
+        <ApolloProvider client={client}>
+          <MultiSigInjectProvider>
+            <Layout>
+              <Component {...pageProps} />
+            </Layout>
+          </MultiSigInjectProvider>
+        </ApolloProvider>
       </RainbowKitProvider>
     </WagmiConfig>
   );

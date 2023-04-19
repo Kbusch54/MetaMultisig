@@ -1,0 +1,17 @@
+#const api_key = "4ab3b5dae6cef14d0ad8399cb89ca7a2";
+
+#// const client = new ApolloClient({
+#//   uri: APIURL,
+#//   cache: new InMemoryCache(),
+#// });
+#// client
+#//   .query({
+#//     query: gql(getWalletsByAddress),
+#//     variables: {
+#//       id: `0x64b946d3bc2ae7be584123935421bbca19fdcca5`,
+#//     },
+#//   })
+#//   .then((data) => console.log("Subgraph data: ", data))
+#//   .catch((err) => {
+#//     console.log("Error fetching data: ", err);
+#//   });

@@ -18,6 +18,7 @@
     "typechain": "^8.1.0"
   },
   "dependencies": {
-    "@optionality.io/clone-factory": "^0.2.1"
+    "@optionality.io/clone-factory": "^0.2.1",
+    "dotenv": "^16.0.3"
   }
 }

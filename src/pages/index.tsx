@@ -1,18 +1,12 @@
-import { ConnectButton } from "@rainbow-me/rainbowkit";
 import type { NextPage } from "next";
 import { useEffect, useState } from "react";
-import { useAccount, useBalance, chain, chainId } from "wagmi";
+import { useAccount } from "wagmi";
 import Hero from "../components/Hero";
-import Nav from "../components/Nav";
-
-
+import Connect from "../components/otherpages/Connect";
 
 const Home: NextPage = () => {
-  const { address, isConnecting, isDisconnected } = useAccount();
-  const { data, isError, isLoading } = useBalance({
-    addressOrName: address,
-    chainId: chain.goerli.id,
-  });
+  const { address } = useAccount();
+
   const [initialRenderComplete, setInitialRenderComplete] = useState(false);
   useEffect(() => {
     setInitialRenderComplete(true);
@@ -23,7 +17,7 @@ const Home: NextPage = () => {
   } else {
     return (
       <div className=" h-screen bg-[#16cfcb]">
-        <Hero />
+        {address ? <Hero address={address} /> : <Connect />}
       </div>
     );
   }

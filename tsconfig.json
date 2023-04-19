@@ -22,7 +22,13 @@
     "**/*.tsx",
     "src/pages/api/transactions.js",
     "src/components/Rando.jsx",
-    "src/pages/Wallets.jsx"
+    // "src/utils/Transactions/functions.js",
+    // "src/components/transactions/PastTransactions.jsx",
+    "src/pages/Wallets.jsx",
+    "src/utils/ContractInteractions/ReadingContract/index.js",
+    "src/helpers/parseExternalContractTransaction.js", // "src/components/Modals/ProposeTransaction.jsx",
+    "src/components/tokenBalances/TokenBalance.jsx" // "src/components/transactions/PendingTransactions.jsx" // "src/utils/getTransactions.js",
+    // "src/utils/postTransaction.js"
   ],
   "exclude": ["node_modules"]
 }

@@ -3,6 +3,8 @@ var fs = require("fs");
 const https = require("https");
 var cors = require("cors");
 var bodyParser = require("body-parser");
+const { response } = require("express");
+const { request } = require("http");
 var app = express();
 
 const port = Number(process.env.PORT) || 49899;
@@ -22,19 +24,43 @@ app.get("/", function (req, res) {
 app.get("/:key", function (req, res) {
   let key = req.params.key;
   console.log("/", key);
+  console.log("key", transactions[key]);
   res.status(200).send(transactions[key]);
 });
+app.get(
+  "/getTransaction/:address/:chainId/:hash",
+  function (request, response) {
+    let { address, chainId, hash } = request.params;
+    console.log(address, chainId, hash);
+    const key = address + "_" + chainId;
+    console.log(key);
+    console.log("transactions of contract", transactions[key]);
+    console.log("transaction", transactions[key][hash]);
+    response.status(200).send(transactions[key][hash]);
+    console.log("sending transaction");
+  }
+);
+
+// app.post('/:key',function(req,res){
+//   let key = req.params.key;
+// })
 
 app.post("/", function (request, response) {
   console.log("POOOOST!!!!", request.body); // your JSON
   response.send(request.body); // echo the result back
-  const key = request.body.address + "_" + request.body.chainId;
+  const key = request.body.address + "_" + request.body.chainID;
   console.log("key:", key);
   if (!transactions[key]) {
     transactions[key] = {};
   }
   transactions[key][request.body.hash] = request.body;
+
   console.log("transactions", transactions);
+  console.log("transactions with key", transactions[key]);
+  console.log(
+    "transactions with key single",
+    transactions[key][request.body.hash]
+  );
 });
 
 /**----------------------

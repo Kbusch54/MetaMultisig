@@ -19,6 +19,7 @@ describe("MultiSigWallet Test", () => {
     );
     MultiSigFactory = await MultiSigFactoryContractFactory.deploy();
 
+    await MultiSigFactory.deployed();
     await MultiSigFactory.create2(
       [owner.address],
       signatureRequired,
@@ -156,6 +157,8 @@ describe("MultiSigWallet Test", () => {
         newSignerAddress,
         newSignaturesRequired
       );
+      //getsignerHash
+      //getSignaturesArray
 
       await MultiSigWallet.executeTransaction(
         MultiSigWallet.address,

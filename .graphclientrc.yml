@@ -1,0 +1,8 @@
+sources:
+  - name: metamultisig
+    handler:
+      graphql:
+        endpoint: https://api.studio.thegraph.com/query/35649/metamultisig/v0.2.0
+
+documents:
+  - ./src/utils/SubgraphQueries/getWalletsByAddress.graphql

@@ -1,64 +1,89 @@
-import React, { useState, useEffect } from "react";
-import wallets from "../utils/dummyData/wallets.json";
-import { useAccount, useBalance, chain, chainId } from "wagmi";
+import React, { useEffect, useState } from "react";
 import Wallet from "../components/Wallet";
+import { gql } from "@apollo/client";
+import { client } from "./_app";
+import { InfinitySpin } from "react-loader-spinner";
 
-// type Props = {};
-// type Create2Event = {
-//   contractId: number;
-//   name: string;
-//   contractAddress: string;
-//   creator: string;
-//   owners: string[];
-//   signaturesRequired: number;
-// };
-
-const MyWallets = () => {
-  const { address, isConnecting, isDisconnected } = useAccount();
-
-  // wallets.Create2Event.map((wallet, i) => {
-  //   if (wallet.owners.includes(address)) {
-  //     console.log("yes");
-  //   }
-  // });
+const MyWallets = ({ contracts }) => {
   const [initialRenderComplete, setInitialRenderComplete] = useState(false);
   useEffect(() => {
     setInitialRenderComplete(true);
   }, []);
-
-  if (!initialRenderComplete) {
-    return null;
-  } else {
-    return (
-      <div>
-        <div className="flex gap-4 p-12">
-          {wallets.Create2Event.map((wallet, i) => (
-            <>
-              {wallet.owners.includes(address) && (
-                <Wallet
-                  key={wallet.contractId}
-                  owners={wallet.owners}
-                  name={wallet.name}
-                  contractId={wallet.contractId}
-                  contractAddress={wallet.contractAddress}
-                  sigsReq={wallet.signaturesRequired}
-                  creator={wallet.creator}
-                />
-              )}
-              {/* {wallet.owners.map((owner, i) => (
-              <p
-                key={i}
-                className={`${owner === address ? "text-orange-200" : ""}`}
-              >
-                {owner}
-              </p>
-            ))} */}
-            </>
-          ))}
+  if (contracts && contracts != "") {
+    if (!initialRenderComplete) {
+      return (
+        <div className="flex justify-center ">
+          <InfinitySpin color="blue" width="500" />
         </div>
-      </div>
-    );
+      );
+    } else {
+      return (
+        <div>
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 p-12 ">
+            {contracts.map((wallet, i) => (
+              <Wallet
+                key={wallet.id}
+                owners={wallet.owners}
+                name={wallet.name}
+                contractId={wallet.id}
+                contractAddress={wallet.address}
+                sigsReq={wallet.signaturesRequired}
+                creator={wallet.creator}
+              />
+            ))}
+          </div>
+        </div>
+      );
+    }
+  } else {
+    return <div>WOw so empty</div>;
   }
 };
 
 export default MyWallets;
+export async function getServerSideProps(context) {
+  const idFromContext = await context.query.account.toString().toLowerCase();
+
+  const GET_WALLETS = gql`
+    query ($id: String) {
+      owner(id: $id) {
+        contracts {
+          id
+          address
+          name
+          creator
+          signaturesRequired
+          owners {
+            id
+            address
+            contracts {
+              id
+            }
+          }
+        }
+      }
+    }
+  `;
+
+  const { data } = await client.query({
+    query: GET_WALLETS,
+
+    variables: {
+      id: idFromContext,
+    },
+  });
+
+  if (data.owner != null || data.owner != undefined) {
+    return {
+      props: {
+        contracts: data.owner.contracts,
+      },
+    };
+  } else {
+    return {
+      props: {
+        contracts: "",
+      },
+    };
+  }
+}

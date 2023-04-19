@@ -173,6 +173,9 @@ contract MetaMultiSig {
         onlyValidSignaturesRequired
     {
         signaturesRequired = newSignaturesRequired;
+        multiSigFactory.emitOwners( address(this),
+            owners,
+            newSignaturesRequired);
     }
 
     function executeTransaction(

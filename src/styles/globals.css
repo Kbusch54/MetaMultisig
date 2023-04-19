@@ -6,6 +6,12 @@
   .hero-button {
     @apply p-4 border-4 rounded-3xl border-[#f18805] bg-[#16cfcb] hover:scale-110 absolute top-44 text-white;
   }
+  .progress-bar {
+    @apply absolute h-[100%] w-[100%];
+  }
+  .progress-bar-you {
+    @apply h-[100%] w-[100%];
+  }
 }
 .background-site {
   /* ff 3.6+ */

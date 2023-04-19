@@ -1,5 +1,6 @@
 import React from "react";
 import { ConnectButton } from "@rainbow-me/rainbowkit";
+import { useAccount, useDisconnect } from "wagmi";
 import Image from "next/image";
 import { motion } from "framer-motion";
 import wallet from "../public/assets/wallet.svg";
@@ -7,7 +8,12 @@ import Link from "next/link";
 
 type Props = {};
 
-const Nav = ({ children }: any) => {
+const Nav = ({ children, address }: any) => {
+  const disconnect = useDisconnect({
+    onSettled(data, error) {},
+  });
+
+  // const { address, isConnecting, isDisconnected } = useAccount();
   return (
     <div className="py-12 px-20  flex justify-between bg-[#f18805] ">
       <Link href={"/"}>
@@ -37,7 +43,11 @@ const Nav = ({ children }: any) => {
       </Link>
       <div className="flex flex-row gap-24 text-xl text-white pt-8 dec">
         <Link href={"/"}>Home</Link>
-        <Link href={"/MyWallets"}> Wallets </Link>
+        <Link
+          href={{ pathname: "/MyWallets", query: { account: `${address}` } }}
+        >
+          <a>Wallets</a>
+        </Link>
         <Link href={"/Bubba"}>Faucet</Link>
       </div>
       <ConnectButton showBalance={true} />
